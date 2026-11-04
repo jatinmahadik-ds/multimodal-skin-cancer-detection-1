@@ -7,6 +7,8 @@ Provides thread-safe relational storage for Doctors, Patients, and Reports.
 
 from __future__ import annotations
 
+import hashlib
+import hmac
 import json
 import os
 import sqlite3
@@ -19,6 +21,25 @@ DB_DIR = Path(__file__).resolve().parent / "data"
 DB_PATH = DB_DIR / "doctor_portal.db"
 
 _lock = threading.Lock()
+
+
+def hash_password(password: str) -> str:
+    """Hash a demo password with PBKDF2-HMAC-SHA256. Not production-grade auth."""
+    salt = os.urandom(16)
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, 100_000)
+    return "pbkdf2_sha256$100000$" + salt.hex() + "$" + digest.hex()
+
+
+def verify_password(password: str, stored: str) -> bool:
+    """Verify a password against a stored PBKDF2 hash or legacy plaintext."""
+    if stored.startswith("pbkdf2_sha256$"):
+        try:
+            _, iterations, salt_hex, digest_hex = stored.split("$", 3)
+            digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), bytes.fromhex(salt_hex), int(iterations))
+            return hmac.compare_digest(digest.hex(), digest_hex)
+        except (ValueError, TypeError):
+            return False
+    return password == stored
 
 
 def get_db_connection() -> sqlite3.Connection:
@@ -146,7 +167,7 @@ def init_database() -> None:
                         "+91 98220 11223",
                         "Dermatology & Oncology",
                         "Sunrise Multispecialty Hospital, Aurangabad",
-                        "Demo@1234",
+                        hash_password("Demo@1234"),
                         datetime.now(timezone.utc).isoformat()
                     ))
 
@@ -295,9 +316,9 @@ def create_patient(p: Dict[str, Any]) -> Dict[str, Any]:
                     int(p["age"]),
                     p["gender"].strip(),
                     p.get("dob", ""),
-                    p.get("phone", "").strip(),
-                    p.get("email", "").strip(),
-                    p.get("address", "").strip(),
+                    str(p.get("phone") or "").strip(),
+                    str(p.get("email") or "").strip(),
+                    str(p.get("address") or "").strip(),
                     now,
                     now
                 ))
@@ -321,9 +342,9 @@ def update_patient(patient_id: str, p: Dict[str, Any]) -> Optional[Dict[str, Any
                     int(p.get("age", 0)),
                     p.get("gender", "").strip(),
                     p.get("dob", ""),
-                    p.get("phone", "").strip(),
-                    p.get("email", "").strip(),
-                    p.get("address", "").strip(),
+                    str(p.get("phone") or "").strip(),
+                    str(p.get("email") or "").strip(),
+                    str(p.get("address") or "").strip(),
                     now,
                     patient_id
                 ))
@@ -467,7 +488,9 @@ def get_dashboard_stats() -> Dict[str, int]:
         total_patients = conn.execute("SELECT COUNT(*) AS c FROM patients").fetchone()["c"]
         today_patients = conn.execute("SELECT COUNT(*) AS c FROM patients WHERE substr(created_at, 1, 10) = ?", (today_date,)).fetchone()["c"]
         total_predictions = conn.execute("SELECT COUNT(*) AS c FROM reports").fetchone()["c"]
-        high_risk_cases = conn.execute("SELECT COUNT(*) AS c FROM reports WHERE risk_level = 'high'").fetchone()["c"]
+        high_risk_cases = conn.execute(
+            "SELECT COUNT(*) AS c FROM reports WHERE risk_level = 'high' OR efficientnet_score >= 0.5 OR clinical_score >= 0.5"
+        ).fetchone()["c"]
         return {
             "total_patients": total_patients,
             "today_patients": today_patients,

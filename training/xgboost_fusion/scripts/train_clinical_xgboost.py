@@ -24,6 +24,9 @@ from __future__ import annotations
 import json
 import platform
 import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -35,13 +38,13 @@ from xgboost import XGBClassifier
 import clinical_features as cf
 from metrics_utils import compute_binary_metrics, select_threshold
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 METADATA = Path(r"E:\Final year project\PAD-UFES-20\metadata.csv")
-CONFIG = ROOT / "config" / "training_config.json"
+CONFIG = ROOT / "training_config.json"
 DATA = ROOT / "data"
-MODELS = ROOT / "models"
-REPORTS = ROOT / "reports"
-CONFIG_OUT = ROOT / "config" / "feature_schema.json"
+MODELS = ROOT
+REPORTS = ROOT / "evaluation"
+CONFIG_OUT = ROOT / "feature_schema.json"
 
 SEED = 42
 

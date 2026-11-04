@@ -1,7 +1,7 @@
 """
 schemas.py
 ================================================================================
-Clinical input schema, form options and validation for the 3-model Doctor Portal.
+Clinical input schema, form options and validation for the dual-model Doctor Portal.
 Derived directly from XGboost/config/feature_schema.json.
 ================================================================================
 """

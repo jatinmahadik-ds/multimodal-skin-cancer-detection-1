@@ -3,7 +3,7 @@ main.py
 ================================================================================
 Vireo Clinical Doctor Portal — FastAPI Backend
 
-Integrates the 2 verified AI models:
+Integrates the 2 verified independent AI models (no validated fusion):
     - Model 1: EfficientNetB0 (ISIC 2019) -> Dermoscopic Image Analysis
     - Model 2: Clinical-Only XGBoost (PAD-UFES-20, 53 dummy features)
 
@@ -26,7 +26,7 @@ from typing import Any, Dict, Optional
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, Response, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import JSONResponse
 
 import database as db
 from model_loader import registry
@@ -273,7 +273,7 @@ async def predict_endpoint(
             content={"detail": "Clinical validation failed.", "errors": exc.errors},
         )
 
-    # 3. 3-Model Independent Inference
+    # 3. Dual-Model Independent Inference
     try:
         result = run_prediction(registry, image_bytes, validated_clinical)
     except InferenceError as exc:
@@ -390,7 +390,7 @@ def login_endpoint(login_in: DoctorLogin):
     password = login_in.password
 
     doc = db.find_doctor_by_email(email)
-    if not doc or doc["password"] != password:
+    if not doc or not db.verify_password(password, doc["password"]):
         raise HTTPException(status_code=401, detail="Incorrect email or password.")
 
     safe_doc = {
@@ -412,6 +412,7 @@ def signup_endpoint(signup_in: DoctorSignup):
     if db.find_doctor_by_email(email):
         raise HTTPException(status_code=409, detail="An account with this email already exists.")
 
+    body["password"] = db.hash_password(body["password"])
     new_doc = db.create_doctor(body)
     return {"status": "success", "message": "Doctor account created."}
 

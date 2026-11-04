@@ -70,7 +70,7 @@ The FastAPI response's `assessment` label in `backend/prediction.py` uses a fixe
 
 ## Training / evaluation scripts
 
-Run these from this directory so `import clinical_features` resolves:
+The scripts now resolve `clinical_features.py` and repository-relative artifact paths automatically when run from this directory:
 
 ```powershell
 python scripts/train_clinical_xgboost.py

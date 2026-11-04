@@ -21,7 +21,10 @@ from __future__ import annotations
 import hashlib
 import json
 from datetime import datetime, timezone
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import matplotlib
 
@@ -35,12 +38,12 @@ from xgboost import XGBClassifier
 import clinical_features as cf
 from metrics_utils import compute_binary_metrics
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
-MODELS = ROOT / "models"
-REPORTS = ROOT / "reports"
+MODELS = ROOT
+REPORTS = ROOT / "evaluation"
 PREDS = ROOT / "predictions"
-SCHEMA = ROOT / "config" / "feature_schema.json"
+SCHEMA = ROOT / "feature_schema.json"
 VAL_METRICS = REPORTS / "metrics_validation.json"
 
 SALT = "pad-ufes-20-clinical-xgb-rowref-v1"  # fixed salt -> stable, non-identifying row refs

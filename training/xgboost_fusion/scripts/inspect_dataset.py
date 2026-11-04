@@ -25,16 +25,19 @@ import json
 import platform
 import sys
 from datetime import datetime, timezone
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import numpy as np
 import pandas as pd
 
 import clinical_features as cf
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 METADATA = Path(r"E:\Final year project\PAD-UFES-20\metadata.csv")
-REPORTS = ROOT / "reports"
+REPORTS = ROOT / "evaluation"
 
 
 def py_version() -> str:

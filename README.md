@@ -8,11 +8,285 @@
 [![XGBoost](https://img.shields.io/badge/XGBoost-3.4-189FDD)](https://xgboost.readthedocs.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+---
+
+## Quick Start
+
+A complete, copy-paste-oriented guide for running the project locally on Windows, Linux or macOS. Every command below was checked against this repository. The full reference sections follow the Table of Contents.
+
+### 1. Project overview
+
+This is a doctor-facing research prototype with **two independent models**:
+
+- **EfficientNetB0** analyses a dermoscopic lesion image (ISIC 2019).
+- **Clinical-only XGBoost** analyses 21 raw patient and lesion fields encoded into 53 clinical features (PAD-UFES-20).
+
+A **FastAPI** backend loads both models and serves an **HTML/CSS/JavaScript** portal. The API returns two separate scores under `pipeline: "dual_model_independent"` with `ensemble_available: false`.
+
+> **No validated multimodal fusion is implemented.** The two scores are not combined into a fused probability, a merged class or a final ensemble diagnosis. The historical report and architecture image describe a retired three-model design that included ResNet50; they are preserved only for provenance.
+
+### 2. System requirements
+
+| Requirement | Minimum / verified value |
+|---|---|
+| Operating system | Windows 10/11, Linux or macOS |
+| Python | **3.12.x** (verified with 3.12.10) |
+| Git | Any recent version |
+| Disk space | ~4 GB free (TensorFlow plus model artifacts) |
+| Hardware | CPU inference is supported; a GPU is optional |
+| Browser | A current Chrome, Edge, Firefox or Safari |
+| Node.js | Not required for the included frontend |
+
+### 3. Clone the repository
+
+```bash
+git clone https://github.com/jatinmahadik-ds/multimodal-skin-cancer-detection-1.git
+cd multimodal-skin-cancer-detection-1
+```
+
+### 4. Create and activate a virtual environment
+
+**Windows PowerShell:**
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+If PowerShell blocks the activation script for the current session only:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\.venv\Scripts\Activate.ps1
+```
+
+**Linux / macOS:**
+
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+```
+
+Confirm that the active interpreter is the virtual environment:
+
+```bash
+python --version
+python -c "import sys; print(sys.executable)"
+```
+
+### 5. Install dependencies
+
+From the repository root, with the virtual environment active:
+
+**Windows PowerShell:**
+
+```powershell
+python -m pip install --upgrade pip
+python -m pip install -r backend\requirements.txt
+```
+
+**Linux / macOS:**
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r backend/requirements.txt
+```
+
+The pinned versions in `backend/requirements.txt` are the verified runtime. TensorFlow, Keras, XGBoost, scikit-learn and pandas are version-sensitive because the saved `.keras` and XGBoost JSON artifacts were produced with them.
+
+### 6. EfficientNetB0 model download and SHA-256 verification
+
+The trained EfficientNetB0 weights are **not stored in Git** because the file is about 28.96 MB. **No verified public download URL is documented for this artifact.** Obtain the exact trained file from the project author or the project's private/institutional artifact storage. Do not download a substitute model from an unknown website.
+
+Place the file here:
+
+```text
+training/models/efficientnet_b0_best.keras
+```
+
+The expected artifact is:
+
+| Property | Value |
+|---|---|
+| Filename | `efficientnet_b0_best.keras` |
+| Size | 28,956,745 bytes |
+| SHA-256 | `6FD74D96F47446E10581C9E7BF775E4385362C4124C68B44B763BBDC73A9558D` |
+
+**Windows PowerShell verification:**
+
+```powershell
+Get-FileHash .\training\models\efficientnet_b0_best.keras -Algorithm SHA256
+```
+
+**Linux / macOS verification:**
+
+```bash
+sha256sum training/models/efficientnet_b0_best.keras
+```
+
+The calculated hash must exactly match the SHA-256 above. A mismatch means the file is not the artifact that produced the reported metrics; do not use it with those results. The model remains excluded from normal Git commits by `.gitignore`.
+
+The clinical XGBoost artifact, feature schema and training configuration are already included and do not need to be downloaded:
+
+```text
+training/xgboost_fusion/clinical_xgboost.json
+training/xgboost_fusion/feature_schema.json
+training/xgboost_fusion/training_config.json
+```
+
+To load the models from another directory instead of copying them, set `SKIN_MODELS_DIR` and/or `SKIN_XGBOOST_DIR` before starting the backend. See Section 12 and `training/models/README.md`.
+
+### 7. Start the FastAPI backend (Terminal 1)
+
+With the virtual environment active, from the repository root:
+
+```powershell
+cd backend
+python -m uvicorn main:app --host 127.0.0.1 --port 8000
+```
+
+Startup can take 10–30 seconds while TensorFlow imports and both models load. Wait for the application startup message before using the portal.
+
+Check model readiness in a second terminal:
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/health
+```
+
+Expected shape:
+
+```json
+{
+  "status": "healthy",
+  "models": {
+    "efficientnet_b0": true,
+    "clinical_xgboost": true,
+    "feature_schema": true
+  },
+  "resnet50_loaded": false,
+  "ensemble_validated": false,
+  "errors": null
+}
+```
+
+All three model flags must be `true`. `resnet50_loaded` and `ensemble_validated` must remain `false`.
+
+### 8. Start the frontend (Terminal 2)
+
+Open a **new terminal**, activate the same virtual environment, then serve the frontend over HTTP:
+
+**Windows PowerShell:**
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+cd frontend
+python -m http.server 5500 --bind 127.0.0.1
+```
+
+**Linux / macOS:**
+
+```bash
+source .venv/bin/activate
+cd frontend
+python -m http.server 5500 --bind 127.0.0.1
+```
+
+Do not open `index.html` directly with `file://`; serve it over HTTP so browser security and CORS behave correctly.
+
+### 9. Log in and use the application
+
+Open:
+
+```text
+http://127.0.0.1:5500/index.html
+```
+
+Use the **seeded demo account** (this account is created by `backend/database.py` only when the database is empty):
+
+| Field | Value |
+|---|---|
+| Email | `meera.kulkarni@vireoclinic.in` |
+| Password | `Demo@1234` |
+
+This is a **fictional demo credential**, not a production secret. Change or remove it before any real deployment.
+
+Basic workflow:
+
+1. Log in with the demo account.
+2. Open **New Assessment** (or **Predict**).
+3. Upload a JPEG or PNG lesion image up to 10 MB.
+4. Enter at least the required clinical fields: **age** and **lesion body region**. Other fields may be left unknown and are passed to XGBoost as missing values.
+5. Run the assessment.
+6. Review the **two independent outputs**:
+   - **EfficientNetB0 image cancer score** from the lesion image.
+   - **Clinical-only XGBoost cancer score** from the 53 encoded clinical features.
+7. There is **no fused score**. The results page states that no validated combined ensemble exists.
+8. Save the report and download the PDF, or review it later in **Reports**.
+
+### 10. Local application, API and health-check URLs
+
+| Service | URL |
+|---|---|
+| Doctor portal | `http://127.0.0.1:5500/index.html` |
+| API root | `http://127.0.0.1:8000/` |
+| API health check | `http://127.0.0.1:8000/health` |
+| Interactive API docs (Swagger UI) | `http://127.0.0.1:8000/docs` |
+
+### 11. Troubleshooting
+
+| Problem | Likely cause and fix |
+|---|---|
+| `python` is not recognized | Install Python 3.12 and reopen the terminal. On Windows, try `py -3.12`. Confirm the virtual environment is active. |
+| PowerShell cannot run `Activate.ps1` | Run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`, then activate again. This changes the policy for the current session only. |
+| `ModuleNotFoundError` for FastAPI, TensorFlow or XGBoost | The virtual environment is not active, or dependencies were installed elsewhere. Activate `.venv` and rerun `python -m pip install -r backend\requirements.txt`. |
+| Port 8000 is already in use | On Windows, find the listener with `Get-NetTCPConnection -LocalPort 8000 -State Listen`, then stop the conflicting process. Alternatively, start the backend on another port. If you change the API port, set `window.SKIN_API_BASE` before `js/script.js` loads. |
+| Port 5500 is already in use | Stop the conflicting process or serve the frontend on port 5501: `python -m http.server 5501 --bind 127.0.0.1`. Ports 5500/5501/3000/8080 are allowed by the default CORS configuration. |
+| `/health` is not healthy or a model flag is `false` | The EfficientNetB0 file is missing, misplaced or corrupt. Place it at `training/models/efficientnet_b0_best.keras` and verify the SHA-256. Check the backend terminal for the exact load error. |
+| SHA-256 mismatch | The file is not the verified artifact. Obtain the exact file from the author/private artifact storage. Do not substitute another model if you want to rely on the reported metrics. |
+| `503` from `/predict` | Models or the feature schema are not ready. Wait for startup, check `/health`, and inspect backend logs. |
+| `422` from `/predict` | A required or numeric clinical field is invalid. Age must be 0–120, region must be a saved category, and Fitzpatrick type must be 1–6. |
+| `413` from `/predict` | The image exceeds the 10 MB default. Use a smaller image or set `SKIN_MAX_UPLOAD_MB` before starting the backend. |
+| Browser CORS error | Serve the frontend from an allowed origin (5500, 5501, 3000 or 8080) or set `SKIN_CORS_ORIGINS` to your origin before starting the backend. |
+| Login fails | Use the exact seeded credentials above. If an older demo database already exists with different credentials, stop the backend, remove only the demo database (`Remove-Item backend\data\doctor_portal.db -Force` on Windows), and restart to reseed it. This deletes demo records. |
+| Blank page or API requests fail from `file://` | Serve the frontend with `python -m http.server` as shown in Step 8. |
+
+### 12. Project technology stack
+
+| Layer | Technology |
+|---|---|
+| Image model | TensorFlow 2.19 / Keras 3.15, EfficientNetB0 |
+| Clinical model | XGBoost 3.4.1 (`XGBClassifier`), 53 features |
+| Data processing | NumPy, pandas, scikit-learn |
+| Image I/O | Pillow |
+| Backend | FastAPI 0.143, Uvicorn 0.54 |
+| Database | SQLite |
+| PDF reports | Custom pure-Python PDF 1.4 writer |
+| Frontend | HTML5, CSS3, JavaScript (ES6) |
+| Runtime | Python 3.12.10 (verified) |
+
+See Section 4 for the full stack table and Section 7 for the XGBoost configuration.
+
+### 13. Final project report and architecture diagram
+
+- [Updated final report (PDF)](documentation/project_report_final.pdf)
+- [Updated final report (editable DOCX)](documentation/project_report_final.docx)
+- [Code-accurate architecture diagram](documentation/architecture_final.png)
+
+The updated report and diagram describe the current two-model implementation. The historical report (`documentation/project_report.pdf`) and historical diagram (`documentation/architecture.png`) are preserved for provenance and still contain retired ResNet50 / three-model fusion material. See [`documentation/README.md`](documentation/README.md) for the accuracy notes.
+
+### 14. Medical disclaimer
+
+This project is an **academic and research prototype only**. It is **not a medical device**, has **not** been clinically validated, and must **not** be used for diagnosis, treatment decisions or patient triage. Model scores are uncalibrated estimates, not diagnostic probabilities. The two models produce independent outputs; no validated multimodal fusion or ensemble prediction is implemented. Always rely on qualified clinical judgement and appropriate diagnostic pathways. Do not enter real patient-identifiable information into this demo.
+
+---
+
 > **Project status:** academic and research prototype only. This repository documents the code that actually runs. It does **not** claim a clinically validated multimodal fusion model, and it is **not** a medical device.
 
 ---
 
 ## Table of Contents
+
+- [Quick Start](#quick-start)
 
 1. [Overview](#1-overview)
 2. [Problem Statement](#2-problem-statement)
@@ -136,6 +410,8 @@ flowchart LR
     J --> K[HTML / CSS / JavaScript portal]
 ```
 
+A rendered version of this diagram is available at [`documentation/architecture_final.png`](documentation/architecture_final.png). The historical [`documentation/architecture.png`](documentation/architecture.png) is retained only for provenance and still shows the retired ResNet50 / three-model design.
+
 ### Runtime request flow
 
 1. The clinician uploads a lesion image and fills in 21 clinical fields.
@@ -170,7 +446,22 @@ ResNet50 was part of an earlier three-model experiment. It is **not** part of th
 | Artifact size | 28,956,745 bytes |
 | SHA-256 | `6FD74D96F47446E10581C9E7BF775E4385362C4124C68B44B763BBDC73A9558D` |
 
-Inference uses `tensorflow.keras.applications.efficientnet.preprocess_input` on raw `[0, 255]` float32 RGB pixels, matching the saved training pipeline. The weight file is **not committed** because of its size; see `training/models/README.md`.
+Inference uses `tensorflow.keras.applications.efficientnet.preprocess_input` on raw `[0, 255]` float32 RGB pixels, matching the saved training pipeline. The weight file is **not tracked by Git** because of its size; see `training/models/README.md`.
+
+### Training methodology
+
+The training source is `training/scripts/efficientnet_training.py`. The procedure recorded in that script is:
+
+1. Load the cleaned ISIC 2019 training, validation and test splits (224×224 RGB).
+2. Initialise EfficientNetB0 with ImageNet weights and remove the original classification top.
+3. Attach global average pooling, dropout and a one-unit sigmoid head.
+4. **Phase 1:** freeze the backbone and train the head for up to 10 epochs at learning rate `1e-4`.
+5. **Phase 2:** unfreeze the final 30 backbone layers (BatchNorm layers stay frozen) and fine-tune for up to 10 epochs at learning rate `1e-5`.
+6. Use Adam, binary cross-entropy, batch size 16 and seed 42.
+7. Select the best checkpoint by validation ROC-AUC (`ModelCheckpoint`), with early stopping (patience 3) and `ReduceLROnPlateau` (factor 0.5, patience 2).
+8. Evaluate the selected checkpoint once on the held-out test split; those values are reported in Section 10.
+
+The training script retains the original absolute dataset paths and does not include the datasets. See `training/scripts/README.md` before rerunning it.
 
 ---
 
@@ -262,7 +553,7 @@ HAM10000 was used only by the removed ResNet50 branch. It is **not used by the f
 
 ### 8.4 Datasets are not distributed
 
-No dataset images, metadata CSVs or dataset archives are committed. Obtain each dataset from its official source and comply with its license and terms of use.
+No dataset images, metadata CSVs or dataset archives are tracked by Git. Obtain each dataset from its official source and comply with its license and terms of use.
 
 ---
 
@@ -290,7 +581,7 @@ Maximum upload size defaults to **10 MB** and can be changed with `SKIN_MAX_UPLO
 
 ### Data-quality caveat
 
-In PAD-UFES-20, the entire survey block is missing for 804 records, and **every one of those records is non-cancer**. This means missingness can act as a proxy for the negative class. The original evaluation includes a missingness analysis; it is not evidence that the model has learned only clinically meaningful signal. See `training/xgboost_fusion/evaluation/missingness_analysis.json`.
+In PAD-UFES-20, the entire survey block is missing for 804 records, and **every one of those records is non-cancer**. This means missingness can act as a proxy for the negative class. On the test split, the 136 survey-absent records are all non-cancer. In the survey-present subgroup (n = 207), accuracy is 0.8116, cancer F1 is 0.8807 and ROC-AUC is 0.8348; these subgroup values are more informative about clinical discrimination than the headline accuracy. See `training/xgboost_fusion/evaluation/missingness_analysis.json` and `classification_report.txt`.
 
 ---
 
@@ -361,7 +652,7 @@ No fused-model metric exists. The EfficientNetB0 and XGBoost metrics come from d
 ### Steps
 
 ```powershell
-git clone <your-repository-url>
+git clone https://github.com/jatinmahadik-ds/multimodal-skin-cancer-detection-1.git
 cd multimodal-skin-cancer-detection-1
 
 py -3.12 -m venv .venv
@@ -382,7 +673,7 @@ python -m pip install -r backend/requirements.txt
 
 ### Place the model weights
 
-The EfficientNetB0 weight file is not committed. Place the verified artifact at:
+The EfficientNetB0 weight file is not tracked by Git. Place the verified artifact at:
 
 ```
 training/models/efficientnet_b0_best.keras
@@ -395,6 +686,20 @@ training/xgboost_fusion/clinical_xgboost.json
 training/xgboost_fusion/feature_schema.json
 training/xgboost_fusion/training_config.json
 ```
+
+Verify the placed file before starting the backend:
+
+```powershell
+Get-FileHash .\training\models\efficientnet_b0_best.keras -Algorithm SHA256
+```
+
+The result must be:
+
+```
+6FD74D96F47446E10581C9E7BF775E4385362C4124C68B44B763BBDC73A9558D
+```
+
+A mismatch means the file is not the artifact that produced the metrics in Section 10. Do not use a substituted weight file with those results.
 
 To load EfficientNetB0 from another directory:
 
@@ -590,7 +895,7 @@ Response shape (abridged):
 
 ## 15. Screenshots
 
-All screenshots below were captured from the running frontend and FastAPI backend on **4 November 2026**, using the seeded demo account and fictional demo patients. No real patient data is shown.
+All screenshots below were captured from the running frontend and FastAPI backend on **4 November 2026**, using the seeded demo account and fictional demo patients. The login screenshot was recaptured on **5 November 2026** after the UI copy was corrected to describe two independent models. No real patient data is shown.
 
 ### Clinician login
 
@@ -616,7 +921,7 @@ All screenshots below were captured from the running frontend and FastAPI backen
 
 ![Dual-model result](documentation/screenshots/06-results.png)
 
-Additional documentation, including the historical report and architecture image, is in [`documentation/`](documentation/).
+The updated technical report and code-accurate architecture diagram — together with the preserved historical report and diagram — are in [`documentation/`](documentation/).
 
 ---
 
@@ -683,8 +988,11 @@ multimodal-skin-cancer-detection-1/
 │       └── evaluation/          # Metrics, confusion matrix, reports
 │
 ├── documentation/
+│   ├── project_report_final.pdf # Updated report (two independent models)
+│   ├── project_report_final.docx# Editable source of the updated report
 │   ├── project_report.pdf       # Historical report (contains outdated 3-model text)
 │   ├── project_report.docx      # Original report source
+│   ├── architecture_final.png   # Code-accurate architecture diagram
 │   ├── architecture.png         # Historical diagram (contains ResNet50)
 │   ├── README.md                # Provenance and accuracy notes
 │   └── screenshots/             # Real screenshots of the running portal
@@ -717,8 +1025,8 @@ multimodal-skin-cancer-detection-1/
 - Demo authentication stores passwords in plain text in SQLite and uses browser storage; it is **not** production authentication.
 - SQLite and local file storage are not suitable for multi-user clinical deployment.
 - There is no audit logging, encryption at rest, role-based access control or secure transport configuration.
-- The frontend is a static prototype and some legacy report/UI copy still refers to the earlier three-model experiment.
-- The project report and architecture image are historical and describe ResNet50 and a 23-feature fusion design that the current code does not implement.
+- The frontend is a static prototype. The PDF generator still renders archived three-model reports that may already exist in a local demo database; new reports contain only the two active model outputs.
+- The historical project report and architecture image describe ResNet50 and a 23-feature fusion design that the current code does not implement. The updated report and diagram in `documentation/` describe the code that actually runs.
 - Training scripts contain original absolute Windows paths and must be adapted before rerunning.
 
 ---
@@ -761,7 +1069,7 @@ Verified artifact fingerprints:
 | `efficientnet_b0_best.keras` | `6FD74D96F47446E10581C9E7BF775E4385362C4124C68B44B763BBDC73A9558D` |
 | `clinical_xgboost.json` | `5EF9A01EFDBB31EA227EEAE930343256339C1952A8EE58440C594837ADDEB56A` |
 
-No dataset images, real patient records, database files, secrets or large model weights are committed.
+No dataset images, real patient records, database files, secrets or large model weights are tracked by Git. The EfficientNetB0 weight file is present locally only if you placed it there; `.gitignore` excludes it from normal commits.
 
 ### License
 

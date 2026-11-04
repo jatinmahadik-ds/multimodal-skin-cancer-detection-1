@@ -1,7 +1,7 @@
 /* ==========================================================================
    VIREO CLINICAL — script.js
-   Full-stack Frontend Client for Multimodal Skin Cancer Doctor Portal.
-   Integrates with FastAPI backend for 3 AI models, SQLite persistence, and PDF reports.
+   Frontend Client for the Dual-Model Skin Cancer Doctor Portal.
+   Integrates with the FastAPI backend for two independent AI models, SQLite persistence, and PDF reports.
    ========================================================================== */
 
 const STORAGE = {
@@ -239,22 +239,7 @@ function initLoginPage() {
       toast('Welcome back, ' + res.doctor.fullName.split(' ')[0] + '.', 'success');
       setTimeout(() => (window.location.href = 'dashboard.html'), 400);
     } catch (err) {
-      // Local fallback for offline demonstration if server is starting
-      if (email.toLowerCase() === 'meera.kulkarni@vireoclinic.in' && pass === 'Demo@1234') {
-        const doc = {
-          fullName: 'Dr. Meera Kulkarni',
-          regNumber: 'MH-DERM-88214',
-          email: 'meera.kulkarni@vireoclinic.in',
-          phone: '+91 98220 11223',
-          specialization: 'Dermatology & Oncology',
-          hospital: 'Sunrise Multispecialty Hospital, Aurangabad',
-        };
-        setSession(doc, false);
-        toast('Welcome back (Local Session).', 'success');
-        setTimeout(() => (window.location.href = 'dashboard.html'), 400);
-      } else {
-        setFieldError(fieldOf(passInput), 'Unable to connect to authentication service.');
-      }
+      setFieldError(fieldOf(passInput), 'Unable to connect to authentication service. Start the FastAPI backend and try again.');
     }
   });
 }
@@ -420,7 +405,7 @@ async function initPatientsPage() {
           <td><span class="badge ${risk}">${riskLabel(risk)}</span></td>
           <td>${pred}</td>
           <td style="white-space:nowrap;">
-            <a href="predict.html?pid=${encodeURIComponent(p.patient_id)}&name=${encodeURIComponent(p.name)}&age=${p.age}&gender=${encodeURIComponent(p.gender)}" class="btn btn-primary btn-sm" title="Run multimodal prediction">+ Predict</a>
+            <a href="predict.html?pid=${encodeURIComponent(p.patient_id)}&name=${encodeURIComponent(p.name)}&age=${p.age}&gender=${encodeURIComponent(p.gender)}" class="btn btn-primary btn-sm" title="Run dual-model prediction">+ Predict</a>
             <button class="btn btn-outline btn-sm" onclick="openPatientHistoryModal('${p.patient_id}')">Reports (${p.patient_id})</button>
           </td>
         </tr>`;
@@ -750,7 +735,7 @@ function initPatientFormPage() {
     const submitBtn = form.querySelector('button[type="submit"]');
     const origText = submitBtn.textContent;
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Analyzing Lesion (3 AI Models)…';
+    submitBtn.textContent = 'Analyzing Lesion (2 AI Models)…';
 
     try {
       // 1. Map form inputs to the verified 21 clinical fields in feature_schema.json
@@ -769,17 +754,24 @@ function initPatientFormPage() {
       const genderVal = (document.getElementById('patGender').value || '').toUpperCase();
       if (['MALE', 'FEMALE'].includes(genderVal)) fd.append('gender', genderVal);
 
-      // Symptoms
+      // Symptoms: an unanswered Yes/No question must stay missing, not become "No".
       const getYesNo = (name) => {
         const rad = form.querySelector(`input[name="${name}"]:checked`);
-        return rad && rad.value === 'Yes' ? 'TRUE' : 'FALSE';
+        if (!rad) return null;
+        return rad.value === 'Yes' ? 'TRUE' : 'FALSE';
       };
-      fd.append('changed', getYesNo('changed'));
-      fd.append('itch', getYesNo('itching'));
-      fd.append('bleed', getYesNo('bleeding'));
-      fd.append('hurt', getYesNo('pain'));
-      fd.append('skin_cancer_history', getYesNo('previousHistory'));
-      fd.append('cancer_history', getYesNo('familyHistory'));
+      const appendIfPresent = (field, value) => {
+        if (value !== null && value !== undefined && String(value).trim() !== '') {
+          fd.append(field, value);
+        }
+      };
+      appendIfPresent('changed', getYesNo('changed'));
+      appendIfPresent('itch', getYesNo('itching'));
+      appendIfPresent('bleed', getYesNo('bleeding'));
+      appendIfPresent('hurt', getYesNo('pain'));
+      appendIfPresent('skin_cancer_history', getYesNo('previousHistory'));
+      // Family history of skin cancer is not a model feature in feature_schema.json.
+      // Do not map it to cancer_history (personal history of other cancer).
 
       // 2. Run real prediction on backend
       const predResp = await fetch(API_BASE + '/predict', {
@@ -832,9 +824,11 @@ function initPatientFormPage() {
           bleed: getYesNo('bleeding'),
           hurt: getYesNo('pain'),
           skin_cancer_history: getYesNo('previousHistory'),
-          cancer_history: getYesNo('familyHistory'),
+          cancer_history: null,
           notes: document.getElementById('clinicalNotes').value.trim(),
         },
+        prediction_label: 'Independent models (no validated ensemble)',
+        risk_level: null,
         doctor_notes: document.getElementById('clinicalNotes').value.trim(),
       };
 

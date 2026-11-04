@@ -51,11 +51,9 @@ cancer_count = len(df_cancer)
 print(f"\nNon-cancer images: {non_cancer_count}")
 print(f"Cancer images:     {cancer_count}")
 
-# Verify expected counts (safety check)
-if non_cancer_count != 16647:
-    print(f"WARNING: Expected 16647 non-cancer, found {non_cancer_count}")
-if cancer_count != 3617:
-    print(f"WARNING: Expected 3617 cancer, found {cancer_count}")
+# Verify counts dynamically instead of hard-coding stale historical values.
+if non_cancer_count < 1 or cancer_count < 1:
+    raise ValueError("Training split must contain both classes.")
 
 print("\n==========================================")
 print("OVERSAMPLING CANCER CLASS (WITH REPLACEMENT)")
@@ -100,10 +98,10 @@ print("\n==========================================")
 print("VERIFICATION")
 print("==========================================\n")
 
-# Check counts
-assert len(balanced_df) == 33294
-assert len(balanced_df[balanced_df["target"] == 0]) == 16647
-assert len(balanced_df[balanced_df["target"] == 1]) == 16647
+# Check counts dynamically
+assert len(balanced_df) == non_cancer_count * 2
+assert len(balanced_df[balanced_df["target"] == 0]) == non_cancer_count
+assert len(balanced_df[balanced_df["target"] == 1]) == non_cancer_count
 
 # Check for issues
 missing_isic = balanced_df["isic_id"].isna().sum()

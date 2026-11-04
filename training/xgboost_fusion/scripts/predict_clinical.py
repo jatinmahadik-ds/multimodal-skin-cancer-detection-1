@@ -25,7 +25,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from typing import Any, Dict
 
 import numpy as np
@@ -34,10 +37,10 @@ from xgboost import XGBClassifier
 
 import clinical_features as cf
 
-ROOT = Path(__file__).resolve().parent
-MODEL_PATH = ROOT / "models" / "clinical_xgboost.json"
-SCHEMA_PATH = ROOT / "config" / "feature_schema.json"
-VAL_METRICS_PATH = ROOT / "reports" / "metrics_validation.json"
+ROOT = Path(__file__).resolve().parents[1]
+MODEL_PATH = ROOT / "clinical_xgboost.json"
+SCHEMA_PATH = ROOT / "feature_schema.json"
+VAL_METRICS_PATH = ROOT / "evaluation" / "metrics_validation.json"
 
 # Every clinical input the model understands (source column names).
 CLINICAL_INPUT_FIELDS = (
