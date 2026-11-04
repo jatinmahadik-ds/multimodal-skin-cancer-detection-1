@@ -1,0 +1,149 @@
+# ---------------------------------------------------------------------------
+# Virtual environments
+# ---------------------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# Keras local cache created at runtime
+.keras_cache/
+
+# ---------------------------------------------------------------------------
+# Datasets and image collections (never commit)
+# ---------------------------------------------------------------------------
+data/
+datasets/
+dataset/
+raw_data/
+processed_data/
+ISIC*/
+ISIC 2019*/
+HAM10000*/
+HAM_10000*/
+PAD-UFES-20*/
+PAD_UFES_20*/
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.rar
+
+# ---------------------------------------------------------------------------
+# Large model weights and checkpoints
+# Keep XGBoost JSON, feature_schema.json and training_config.json tracked.
+# ---------------------------------------------------------------------------
+*.keras
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.onnx
+*.safetensors
+*.ckpt
+*.pb
+saved_model/
+checkpoints/
+weights/
+*.weights
+
+# ---------------------------------------------------------------------------
+# Training output, logs and experiment tracking
+# ---------------------------------------------------------------------------
+runs/
+logs/
+*.log
+wandb/
+mlruns/
+lightning_logs/
+tensorboard/
+events.out.tfevents.*
+*.tfevents.*
+
+# ---------------------------------------------------------------------------
+# Runtime database, uploads and generated reports
+# ---------------------------------------------------------------------------
+backend/data/
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+backend/uploads/
+storage/
+uploads/
+
+# ---------------------------------------------------------------------------
+# Secrets and credentials
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+secrets/
+secret/
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+
+# ---------------------------------------------------------------------------
+# Frontend dependencies and build output
+# ---------------------------------------------------------------------------
+node_modules/
+dist/
+build/
+.vite/
+.cache/
+*.tsbuildinfo
+
+# ---------------------------------------------------------------------------
+# IDE / editor configuration
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.code-workspace
+*.suo
+*.user
+*.swp
+*.swo
+
+# ---------------------------------------------------------------------------
+# OS and temporary files
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+tmp/
+temp/
+*.tmp
+*.bak
+*~
+
+# ---------------------------------------------------------------------------
+# Explicitly keep project artifacts and documentation
+# ---------------------------------------------------------------------------
+!training/xgboost_fusion/*.json
+!training/xgboost_fusion/evaluation/*.json
+!training/xgboost_fusion/evaluation/*.csv
+!training/models/evaluation/*.csv
+!documentation/**

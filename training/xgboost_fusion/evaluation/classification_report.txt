@@ -1,0 +1,61 @@
+CLINICAL-ONLY XGBOOST ON PAD-UFES-20 - TEST SET REPORT
+================================================================
+
+Model:               models/clinical_xgboost.json (XGBoost, 53 clinical features)
+Inputs:              clinical metadata ONLY (no images, no CNN outputs, no embeddings)
+Threshold:           0.56 (selected on the VALIDATION split; 0.5 shown as reference)
+Test records:        343 (cancer=163, non-cancer=180)
+Test patients:       214 (no patient overlap with train/validation - see reports/split_integrity.json)
+
+OVERALL METRICS (threshold selected on validation)
+----------------------------------------------------------------
+  accuracy:                0.8863
+  precision (cancer):      0.8780
+  recall/sensitivity:      0.8834
+  specificity:             0.8889
+  F1 (cancer):             0.8807
+  macro F1:                0.8860
+  ROC-AUC:                 0.9596
+  confusion matrix:        TN=160 FP=20 FN=19 TP=144
+  majority-class baseline: accuracy=0.5248 (always predicts class 0)
+
+Classification report (selected threshold):
+                precision    recall  f1-score   support
+
+non-cancer (0)     0.8939    0.8889    0.8914       180
+    cancer (1)     0.8780    0.8834    0.8807       163
+
+      accuracy                         0.8863       343
+     macro avg     0.8860    0.8862    0.8860       343
+  weighted avg     0.8863    0.8863    0.8863       343
+
+REFERENCE: metrics at the DEFAULT 0.5 threshold
+----------------------------------------------------------------
+  accuracy=0.8921  F1(cancer)=0.8889  ROC-AUC=0.9596  CM: TN=158 FP=22 FN=15 TP=148
+                precision    recall  f1-score   support
+
+non-cancer (0)     0.9133    0.8778    0.8952       180
+    cancer (1)     0.8706    0.9080    0.8889       163
+
+      accuracy                         0.8921       343
+     macro avg     0.8919    0.8929    0.8920       343
+  weighted avg     0.8930    0.8921    0.8922       343
+
+MISSINGNESS SUBGROUPS (survey block present vs absent)
+----------------------------------------------------------------
+  survey_present: n=207 (cancer=163, non-cancer=44) accuracy=0.8116 F1(cancer)=0.8807 ROC-AUC=0.8348 CM: TN=24 FP=20 FN=19 TP=144
+  survey_absent: n=136 (cancer=0, non-cancer=136) accuracy=1.0000 F1(cancer)=unavailable ROC-AUC=unavailable CM: TN=136 FP=0 FN=0 TP=0
+      -> recall/sensitivity unavailable: no cancer cases in this subgroup
+
+INTERPRETATION NOTES
+----------------------------------------------------------------
+  * False negatives (missed cancers) are the clinically costly errors. At the
+    selected threshold there were 19 FN vs 20 FP; lowering the threshold trades more
+    false positives for fewer missed cancers.
+  * Every record missing the survey block in this dataset is a non-cancer
+    diagnosis, so overall metrics are partly inflated by collection/missingness
+    patterns. Prefer the survey-present subgroup numbers when judging clinical
+    signal, and see reports/missingness_analysis.json.
+  * Scores are NOT calibrated medical probabilities; calibration was not evaluated.
+  * Project label definition: cancer = BCC/SCC/MEL; non-cancer = ACK/NEV/SEK.
+    ACK can be precancerous; this is a project-specific binary definition.

@@ -1,0 +1,46 @@
+{
+  "generated_at_utc": "2026-10-17T07:29:31.998439+00:00",
+  "seed": 42,
+  "method": "StratifiedGroupKFold(n_splits=20, shuffle=True, random_state=42) with patient_id groups; folds 0-2=test, 3-5=validation, 6-19=train. Each patient belongs to exactly one fold by construction, so no patient can appear in two splits.",
+  "class_counts": {
+    "train": {
+      "rows": 1609,
+      "cancer_1": 762,
+      "non_cancer_0": 847,
+      "cancer_rate": 0.4736,
+      "patients": 949
+    },
+    "validation": {
+      "rows": 346,
+      "cancer_1": 164,
+      "non_cancer_0": 182,
+      "cancer_rate": 0.474,
+      "patients": 210
+    },
+    "test": {
+      "rows": 343,
+      "cancer_1": 163,
+      "non_cancer_0": 180,
+      "cancer_rate": 0.4752,
+      "patients": 214
+    }
+  },
+  "patient_overlap": {
+    "train_val": {
+      "n_overlapping_patients": 0,
+      "patients": []
+    },
+    "train_test": {
+      "n_overlapping_patients": 0,
+      "patients": []
+    },
+    "validation_test": {
+      "n_overlapping_patients": 0,
+      "patients": []
+    }
+  },
+  "patient_overlap_zero": true,
+  "patient_overlap_all_patients_listed_if_small": true,
+  "lesion_id_note": "lesion_id is NOT used for grouping: 250 lesion ids are reused across different patients in PAD-UFES-20.",
+  "test_set_policy": "test folds were excluded from preprocessing fits, early stopping, and threshold selection"
+}

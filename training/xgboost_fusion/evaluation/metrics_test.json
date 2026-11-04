@@ -1,0 +1,150 @@
+{
+  "generated_at_utc": "2026-10-17T07:29:46.669515+00:00",
+  "model_path": "E:\\Final year project\\XGboost\\models\\clinical_xgboost.json",
+  "feature_schema": "E:\\Final year project\\XGboost\\config\\feature_schema.json",
+  "n_features": 53,
+  "threshold_source": "validation split only (reports/metrics_validation.json)",
+  "metrics_at_selected_threshold": {
+    "threshold": 0.56,
+    "n_records": 343,
+    "n_positive": 163,
+    "n_negative": 180,
+    "accuracy": 0.8862973760932945,
+    "precision_cancer": 0.8780487804878049,
+    "recall_cancer_sensitivity": 0.8834355828220859,
+    "specificity": 0.8888888888888888,
+    "f1_cancer": 0.8807339449541285,
+    "macro_f1": 0.8860494237305461,
+    "roc_auc": 0.9596114519427403,
+    "confusion_matrix": {
+      "tn": 160,
+      "fp": 20,
+      "fn": 19,
+      "tp": 144
+    },
+    "false_negatives": 19,
+    "false_positives": 20,
+    "majority_class_baseline": {
+      "majority_label": 0,
+      "accuracy_if_always_majority": 0.5247813411078717,
+      "note": "trivial baseline: always predict the majority class of this subset"
+    },
+    "unavailable_metrics": []
+  },
+  "metrics_at_default_0.5": {
+    "threshold": 0.5,
+    "n_records": 343,
+    "n_positive": 163,
+    "n_negative": 180,
+    "accuracy": 0.892128279883382,
+    "precision_cancer": 0.8705882352941177,
+    "recall_cancer_sensitivity": 0.9079754601226994,
+    "specificity": 0.8777777777777778,
+    "f1_cancer": 0.8888888888888888,
+    "macro_f1": 0.892036512433113,
+    "roc_auc": 0.9596114519427403,
+    "confusion_matrix": {
+      "tn": 158,
+      "fp": 22,
+      "fn": 15,
+      "tp": 148
+    },
+    "false_negatives": 15,
+    "false_positives": 22,
+    "majority_class_baseline": {
+      "majority_label": 0,
+      "accuracy_if_always_majority": 0.5247813411078717,
+      "note": "trivial baseline: always predict the majority class of this subset"
+    },
+    "unavailable_metrics": []
+  },
+  "test_class_distribution": {
+    "cancer_1": 163,
+    "non_cancer_0": 180,
+    "total": 343
+  },
+  "missingness_subgroups": {
+    "survey_present": {
+      "n": 207,
+      "metrics": {
+        "threshold": 0.56,
+        "n_records": 207,
+        "n_positive": 163,
+        "n_negative": 44,
+        "accuracy": 0.8115942028985508,
+        "precision_cancer": 0.8780487804878049,
+        "recall_cancer_sensitivity": 0.8834355828220859,
+        "specificity": 0.5454545454545454,
+        "f1_cancer": 0.8807339449541285,
+        "macro_f1": 0.7162290414425815,
+        "roc_auc": 0.8347741215839376,
+        "confusion_matrix": {
+          "tn": 24,
+          "fp": 20,
+          "fn": 19,
+          "tp": 144
+        },
+        "false_negatives": 19,
+        "false_positives": 20,
+        "majority_class_baseline": {
+          "majority_label": 1,
+          "accuracy_if_always_majority": 0.7874396135265701,
+          "note": "trivial baseline: always predict the majority class of this subset"
+        },
+        "unavailable_metrics": []
+      }
+    },
+    "survey_absent": {
+      "n": 136,
+      "metrics": {
+        "threshold": 0.56,
+        "n_records": 136,
+        "n_positive": 0,
+        "n_negative": 136,
+        "accuracy": 1.0,
+        "precision_cancer": null,
+        "recall_cancer_sensitivity": null,
+        "specificity": 1.0,
+        "f1_cancer": null,
+        "macro_f1": null,
+        "roc_auc": null,
+        "confusion_matrix": {
+          "tn": 136,
+          "fp": 0,
+          "fn": 0,
+          "tp": 0
+        },
+        "false_negatives": 0,
+        "false_positives": 0,
+        "majority_class_baseline": {
+          "majority_label": 0,
+          "accuracy_if_always_majority": 1.0,
+          "note": "trivial baseline: always predict the majority class of this subset"
+        },
+        "unavailable_metrics": [
+          "precision_cancer",
+          "recall_cancer_sensitivity",
+          "f1_cancer",
+          "macro_f1",
+          "roc_auc"
+        ]
+      }
+    }
+  },
+  "reload_reproducibility": {
+    "max_abs_score_diff": 0.0,
+    "within_1e-8": true,
+    "note": "saved model reloaded from disk; predictions match the evaluation run"
+  },
+  "transform_report": {
+    "stage": "test_evaluation",
+    "n_rows": 343,
+    "unexpected_tokens": {},
+    "unseen_categories": {}
+  },
+  "caveats": [
+    "Scores are XGBoost discriminative outputs, NOT calibrated medical probabilities; calibration was not evaluated.",
+    "The survey-absent subgroup is 100% non-cancer in this dataset, so overall metrics partly reflect dataset collection/missingness patterns.",
+    "No image data, CNN predictions or embeddings were used; this model is clinical-only."
+  ]
+}

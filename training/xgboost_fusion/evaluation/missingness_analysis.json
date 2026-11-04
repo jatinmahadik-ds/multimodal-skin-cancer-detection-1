@@ -1,0 +1,223 @@
+{
+  "indicator_definition": {
+    "name": "survey_block_present",
+    "fields": [
+      "smoke",
+      "drink",
+      "pesticide",
+      "gender",
+      "skin_cancer_history",
+      "cancer_history",
+      "has_piped_water",
+      "has_sewage_system",
+      "fitspatrick",
+      "diameter_1",
+      "diameter_2"
+    ],
+    "used_as_model_feature": false,
+    "note": "defined for analysis only; the model never receives this indicator explicitly (it can still indirectly exploit per-feature missingness, which is exactly what we are measuring)"
+  },
+  "target_by_survey_presence_per_split": {
+    "train": {
+      "survey_present": {
+        "rows": 1073,
+        "cancer_1": 762,
+        "non_cancer_0": 311,
+        "cancer_rate": 0.7102
+      },
+      "survey_absent": {
+        "rows": 536,
+        "cancer_1": 0,
+        "non_cancer_0": 536,
+        "cancer_rate": 0.0
+      }
+    },
+    "validation": {
+      "survey_present": {
+        "rows": 214,
+        "cancer_1": 164,
+        "non_cancer_0": 50,
+        "cancer_rate": 0.7664
+      },
+      "survey_absent": {
+        "rows": 132,
+        "cancer_1": 0,
+        "non_cancer_0": 132,
+        "cancer_rate": 0.0
+      }
+    },
+    "test": {
+      "survey_present": {
+        "rows": 207,
+        "cancer_1": 163,
+        "non_cancer_0": 44,
+        "cancer_rate": 0.7874
+      },
+      "survey_absent": {
+        "rows": 136,
+        "cancer_1": 0,
+        "non_cancer_0": 136,
+        "cancer_rate": 0.0
+      }
+    }
+  },
+  "validation_subgroup_performance": {
+    "survey_present": {
+      "n": 214,
+      "metrics": {
+        "threshold": 0.56,
+        "n_records": 214,
+        "n_positive": 164,
+        "n_negative": 50,
+        "accuracy": 0.8551401869158879,
+        "precision_cancer": 0.88,
+        "recall_cancer_sensitivity": 0.9390243902439024,
+        "specificity": 0.58,
+        "f1_cancer": 0.9085545722713865,
+        "macro_f1": 0.7801199827649068,
+        "roc_auc": 0.886219512195122,
+        "confusion_matrix": {
+          "tn": 29,
+          "fp": 21,
+          "fn": 10,
+          "tp": 154
+        },
+        "false_negatives": 10,
+        "false_positives": 21,
+        "majority_class_baseline": {
+          "majority_label": 1,
+          "accuracy_if_always_majority": 0.7663551401869159,
+          "note": "trivial baseline: always predict the majority class of this subset"
+        },
+        "unavailable_metrics": []
+      }
+    },
+    "survey_absent": {
+      "n": 132,
+      "metrics": {
+        "threshold": 0.56,
+        "n_records": 132,
+        "n_positive": 0,
+        "n_negative": 132,
+        "accuracy": 1.0,
+        "precision_cancer": null,
+        "recall_cancer_sensitivity": null,
+        "specificity": 1.0,
+        "f1_cancer": null,
+        "macro_f1": null,
+        "roc_auc": null,
+        "confusion_matrix": {
+          "tn": 132,
+          "fp": 0,
+          "fn": 0,
+          "tp": 0
+        },
+        "false_negatives": 0,
+        "false_positives": 0,
+        "majority_class_baseline": {
+          "majority_label": 0,
+          "accuracy_if_always_majority": 1.0,
+          "note": "trivial baseline: always predict the majority class of this subset"
+        },
+        "unavailable_metrics": [
+          "precision_cancer",
+          "recall_cancer_sensitivity",
+          "f1_cancer",
+          "macro_f1",
+          "roc_auc"
+        ]
+      }
+    }
+  },
+  "majority_baseline_validation": {
+    "majority_label": 0,
+    "accuracy_if_always_majority": 0.5260115606936416,
+    "note": "trivial baseline: always predict the majority class of this subset"
+  },
+  "sensitivity_experiment": {
+    "description": "Refit of the identical pipeline on the survey-present sub-cohort only (patients stay grouped; the primary model and its threshold are untouched). EXPLORATORY - not the primary reported model.",
+    "sub_cohort_sizes": {
+      "train": 1073,
+      "validation": 214,
+      "test": 207
+    },
+    "sub_cohort_class_counts": {
+      "train": {
+        "cancer_1": 762,
+        "non_cancer_0": 311
+      },
+      "validation": {
+        "cancer_1": 164,
+        "non_cancer_0": 50
+      },
+      "test": {
+        "cancer_1": 163,
+        "non_cancer_0": 44
+      }
+    },
+    "best_iteration": 182,
+    "validation_threshold_selection": {
+      "threshold": 0.7,
+      "validation_f1_cancer": 0.9287925696594427,
+      "validation_recall": 0.9146341463414634,
+      "validation_precision": 0.9433962264150944,
+      "method": "maximise validation cancer F1; ties -> higher recall, then closest to 0.5",
+      "n_candidates": 91
+    },
+    "test_metrics_at_validation_threshold": {
+      "threshold": 0.7,
+      "n_records": 207,
+      "n_positive": 163,
+      "n_negative": 44,
+      "accuracy": 0.8115942028985508,
+      "precision_cancer": 0.918918918918919,
+      "recall_cancer_sensitivity": 0.8343558282208589,
+      "specificity": 0.7272727272727273,
+      "f1_cancer": 0.8745980707395499,
+      "macro_f1": 0.7479786470202603,
+      "roc_auc": 0.83707473508087,
+      "confusion_matrix": {
+        "tn": 32,
+        "fp": 12,
+        "fn": 27,
+        "tp": 136
+      },
+      "false_negatives": 27,
+      "false_positives": 12,
+      "majority_class_baseline": {
+        "majority_label": 1,
+        "accuracy_if_always_majority": 0.7874396135265701,
+        "note": "trivial baseline: always predict the majority class of this subset"
+      },
+      "unavailable_metrics": []
+    },
+    "test_metrics_at_default_0.5": {
+      "threshold": 0.5,
+      "n_records": 207,
+      "n_positive": 163,
+      "n_negative": 44,
+      "accuracy": 0.8357487922705314,
+      "precision_cancer": 0.8816568047337278,
+      "recall_cancer_sensitivity": 0.9141104294478528,
+      "specificity": 0.5454545454545454,
+      "f1_cancer": 0.8975903614457831,
+      "macro_f1": 0.7414781075521598,
+      "roc_auc": 0.83707473508087,
+      "confusion_matrix": {
+        "tn": 24,
+        "fp": 20,
+        "fn": 14,
+        "tp": 149
+      },
+      "false_negatives": 14,
+      "false_positives": 20,
+      "majority_class_baseline": {
+        "majority_label": 1,
+        "accuracy_if_always_majority": 0.7874396135265701,
+        "note": "trivial baseline: always predict the majority class of this subset"
+      },
+      "unavailable_metrics": []
+    }
+  },
+  "interpretation_guidance": "If the survey-absent subgroup is 100% non-cancer, any overall test score partially reflects dataset collection patterns (missingness -> non-cancer) rather than lesion-clinical signal. Compare the survey-present subgroup and the sensitivity experiment before drawing conclusions; do not claim clinical generalisation from a high overall score alone."
+}

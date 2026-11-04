@@ -1,0 +1,38 @@
+{
+  "project": "clinical-only XGBoost on PAD-UFES-20 metadata",
+  "description": "Conservative baseline configuration for a small tabular dataset (~2.3k rows, 1.4k patients). Hyperparameters are intentionally few: no broad tuning is performed on this small dataset.",
+  "seed": 42,
+  "split": {
+    "method": "StratifiedGroupKFold(n_splits=20) at row level with patient_id groups; folds 0-2 = test, folds 3-5 = validation, folds 6-19 = train",
+    "fractions": {"train": 0.7, "validation": 0.15, "test": 0.15},
+    "group_column": "patient_id",
+    "random_state": 42
+  },
+  "model": {
+    "max_depth": 3,
+    "learning_rate": 0.05,
+    "n_estimators": 2000,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "min_child_weight": 3,
+    "reg_alpha": 0.0,
+    "reg_lambda": 1.0,
+    "gamma": 0.0,
+    "scale_pos_weight": 1.0,
+    "tree_method": "hist",
+    "eval_metric": "logloss",
+    "early_stopping_rounds": 50,
+    "random_state": 42,
+    "n_jobs": -1,
+    "notes": "Classes are nearly balanced (1089 cancer vs 1209 non-cancer overall), so scale_pos_weight is left at 1.0. Early stopping uses the VALIDATION split only (logloss). Depth 3 and min_child_weight 3 keep trees shallow for this small dataset."
+  },
+  "threshold_selection": {
+    "method": "sweep 0.05..0.95 (step 0.01) on the VALIDATION split, maximise cancer-class F1; ties broken by higher recall, then by proximity to 0.5",
+    "reference_threshold": 0.5
+  },
+  "missingness_analysis": {
+    "survey_block_fields": ["smoke", "drink", "pesticide", "gender", "skin_cancer_history", "cancer_history", "has_piped_water", "has_sewage_system", "fitspatrick", "diameter_1", "diameter_2"],
+    "indicator_used_as_feature": false,
+    "sensitivity_experiment": "refit identical pipeline (same hyperparameters, same seed, same patient-grouped splits) on the survey-present sub-cohort only; exploratory, not the primary model"
+  }
+}

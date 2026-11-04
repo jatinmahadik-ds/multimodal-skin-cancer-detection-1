@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient Clinical Assessment · Vireo Clinical</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" width="18" height="18"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="4"/></svg>
+      </span>
+      Vireo Clinical
+    </div>
+    <nav>
+      <a href="dashboard.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a href="predict.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="4"/></svg>
+        AI Prediction
+      </a>
+      <a href="patients.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Patients
+      </a>
+      <a href="reports.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 15h6M9 11h6"/></svg>
+        Reports
+      </a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1"/></svg>
+        Profile
+      </a>
+      <a href="#" class="nav-item" data-logout>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Logout
+      </a>
+    </nav>
+    <div class="sidebar-foot">Vireo Clinical v0.9 · Prototype</div>
+  </aside>
+
+  <div class="main-area">
+    <header class="topbar">
+      <div class="flex" style="align-items:center; gap:14px;">
+        <button class="menu-toggle" aria-label="Toggle menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div>
+          <h1 class="page-title">Patient Information</h1>
+          <div class="page-date" data-current-date></div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="doctor-chip">
+          <div class="avatar" data-doctor-initials>DR</div>
+          <div>
+            <div class="name" data-doctor-name>Doctor</div>
+            <div class="role" data-doctor-role>Specialization</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="form-stepper">
+        <div class="step done"><span class="num">✓</span> Basic Information</div>
+        <div class="step done"><span class="num">✓</span> Clinical Information</div>
+        <div class="step active"><span class="num">3</span> Lesion Image</div>
+      </div>
+
+      <form id="patientForm" novalidate>
+        <div class="card card-pad" style="margin-bottom:22px;">
+          <div class="form-section">
+            <div class="form-section-title"><span class="idx">01</span> Basic Information</div>
+            <div class="form-section-sub">Identity and contact details for this patient.</div>
+
+            <div class="form-row-split">
+              <div class="field">
+                <label for="patName">Patient Full Name</label>
+                <input type="text" id="patName" data-required="true" placeholder="Full name">
+                <div class="error">⚠ <span></span></div>
+              </div>
+              <div class="field">
+                <label for="patId">Patient ID <span class="text-muted" style="font-weight:400;">(auto-generated if left blank)</span></label>
+                <input type="text" id="patId" placeholder="PT-10001">
+              </div>
+            </div>
+
+            <div class="form-row-3">
+              <div class="field">
+                <label for="patAge">Age</label>
+                <input type="number" id="patAge" data-required="true" min="0" max="120" placeholder="e.g. 45">
+                <div class="error">⚠ <span></span></div>
+              </div>
+              <div class="field">
+                <label for="patGender">Gender</label>
+                <select id="patGender" data-required="true">
+                  <option value="">Select</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+                <div class="error">⚠ <span></span></div>
+              </div>
+              <div class="field">
+                <label for="patDob">Date of Birth</label>
+                <input type="date" id="patDob">
+              </div>
+            </div>
+
+            <div class="form-row-split">
+              <div class="field">
+                <label for="patPhone">Phone Number</label>
+                <input type="tel" id="patPhone" data-required="true" placeholder="+91 98765 43210">
+                <div class="error">⚠ <span></span></div>
+              </div>
+              <div class="field">
+                <label for="patEmail">Email</label>
+                <input type="text" id="patEmail" placeholder="patient@email.com">
+                <div class="error">⚠ <span></span></div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="patAddress">Address</label>
+              <textarea id="patAddress" rows="2" placeholder="Street, city, state"></textarea>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title"><span class="idx">02</span> Clinical Information</div>
+            <div class="form-section-sub">Details about the lesion and relevant medical history.</div>
+
+            <div class="field">
+              <label>Lesion Location</label>
+              <div class="chip-grid">
+                <label class="chip"><input type="radio" name="lesionLocation" value="Face"> Face</label>
+                <label class="chip"><input type="radio" name="lesionLocation" value="Scalp"> Scalp</label>
+                <label class="chip"><input type="radio" name="lesionLocation" value="Neck"> Neck</label>
+                <label class="chip"><input type="radio" name="lesionLocation" value="Chest"> Chest</label>
+                <label class="chip"><input type="radio" name="lesionLocation" value="Back"> Back</label>
+                <label class="chip"><input type="radio" name="lesionLocation" value="Arm"> Arm</label>
+                <label class="chip"><input type="radio" name="lesionLocation" value="Hand"> Hand</label>
+                <label class="chip"><input type="radio" name="lesionLocation" value="Leg"> Leg</label>
+                <label class="chip"><input type="radio" name="lesionLocation" value="Foot"> Foot</label>
+                <label class="chip"><input type="radio" name="lesionLocation" value="Other"> Other</label>
+              </div>
+            </div>
+
+            <div class="form-row-split">
+              <div class="field">
+                <label for="lesionDuration">Lesion Duration</label>
+                <input type="text" id="lesionDuration" placeholder="e.g. 3 months">
+              </div>
+              <div class="field">
+                <label>Sun / UV Exposure Level</label>
+                <div class="range-slider-row">
+                  <input type="range" id="uvExposure" min="0" max="4" value="2">
+                  <span class="range-val" id="uvExposureVal">Moderate</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row-split" style="margin-bottom:0;">
+              <div class="field">
+                <label>Has the lesion changed recently?</label>
+                <div class="pill-toggle">
+                  <input type="radio" name="changed" id="changedYes" value="Yes"><label for="changedYes">Yes</label>
+                  <input type="radio" name="changed" id="changedNo" value="No"><label for="changedNo">No</label>
+                </div>
+              </div>
+              <div class="field">
+                <label>Itching?</label>
+                <div class="pill-toggle">
+                  <input type="radio" name="itching" id="itchingYes" value="Yes"><label for="itchingYes">Yes</label>
+                  <input type="radio" name="itching" id="itchingNo" value="No"><label for="itchingNo">No</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row-split">
+              <div class="field">
+                <label>Bleeding?</label>
+                <div class="pill-toggle">
+                  <input type="radio" name="bleeding" id="bleedingYes" value="Yes"><label for="bleedingYes">Yes</label>
+                  <input type="radio" name="bleeding" id="bleedingNo" value="No"><label for="bleedingNo">No</label>
+                </div>
+              </div>
+              <div class="field">
+                <label>Pain?</label>
+                <div class="pill-toggle">
+                  <input type="radio" name="pain" id="painYes" value="Yes"><label for="painYes">Yes</label>
+                  <input type="radio" name="pain" id="painNo" value="No"><label for="painNo">No</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row-split">
+              <div class="field">
+                <label>Family history of skin cancer?</label>
+                <div class="pill-toggle">
+                  <input type="radio" name="familyHistory" id="famYes" value="Yes"><label for="famYes">Yes</label>
+                  <input type="radio" name="familyHistory" id="famNo" value="No"><label for="famNo">No</label>
+                </div>
+              </div>
+              <div class="field">
+                <label>Previous history of skin cancer?</label>
+                <div class="pill-toggle">
+                  <input type="radio" name="previousHistory" id="prevYes" value="Yes"><label for="prevYes">Yes</label>
+                  <input type="radio" name="previousHistory" id="prevNo" value="No"><label for="prevNo">No</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="field" style="margin-bottom:0;">
+              <label for="clinicalNotes">Additional Clinical Notes</label>
+              <textarea id="clinicalNotes" rows="3" placeholder="Any other observations relevant to this assessment…"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="form-section" style="margin-bottom:0;">
+            <div class="form-section-title"><span class="idx">03</span> Skin Lesion Image</div>
+            <div class="form-section-sub">Upload a clear, well-lit image of the lesion for AI analysis.</div>
+
+            <input type="file" id="lesionImageInput" accept=".jpg,.jpeg,.png,image/jpeg,image/png" style="display:none;">
+
+            <div class="dropzone" id="dropzone">
+              <div class="dz-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <h4>Drag &amp; drop the lesion image here</h4>
+              <p class="text-muted" style="margin-bottom:12px;">or</p>
+              <button type="button" class="btn btn-outline btn-sm" id="patientBrowseBtn">Browse Image</button>
+              <div class="formats">SUPPORTED: JPG · JPEG · PNG &nbsp;·&nbsp; MAX SIZE: 10MB</div>
+            </div>
+
+            <div class="image-preview-wrap" id="imagePreviewWrap">
+              <img id="imagePreviewImg" alt="Lesion preview" style="cursor:pointer;" title="Click image to change">
+              <button type="button" class="remove-img" id="removeImageBtn" aria-label="Remove image">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+              <div class="img-tag" id="imgFileName"></div>
+            </div>
+            <div id="patientPreviewActions" style="display:none; margin-top:10px; gap:8px; align-items:center;">
+              <button type="button" class="btn btn-outline btn-sm" id="patientReplaceBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px; vertical-align:-2px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Choose Different Image
+              </button>
+              <span class="text-muted" style="font-size:12px;">or click preview image to replace</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button type="submit" class="btn btn-primary btn-lg">Analyze Patient</button>
+          <a href="dashboard.html" class="btn btn-ghost">Cancel</a>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>
+
+<script src="js/script.js"></script>
+<script>requireAuth();</script>
+</body>
+</html>

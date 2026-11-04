@@ -1,0 +1,514 @@
+{
+  "generated_at_utc": "2026-10-17T07:24:13.846704+00:00",
+  "metadata_path": "E:\\Final year project\\PAD-UFES-20\\metadata.csv",
+  "environment": {
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "xgboost": "3.4.1",
+      "scikit-learn": "1.9.1",
+      "pandas": "3.0.6",
+      "numpy": "2.1.3",
+      "matplotlib": "3.11.2",
+      "scipy": "1.18.1"
+    }
+  },
+  "shape": {
+    "rows": 2298,
+    "columns": 26
+  },
+  "columns": [
+    {
+      "name": "patient_id",
+      "dtype": "str",
+      "n_unique": 1373
+    },
+    {
+      "name": "lesion_id",
+      "dtype": "int64",
+      "n_unique": 1641
+    },
+    {
+      "name": "smoke",
+      "dtype": "object",
+      "n_unique": 2
+    },
+    {
+      "name": "drink",
+      "dtype": "object",
+      "n_unique": 2
+    },
+    {
+      "name": "background_father",
+      "dtype": "str",
+      "n_unique": 13
+    },
+    {
+      "name": "background_mother",
+      "dtype": "str",
+      "n_unique": 11
+    },
+    {
+      "name": "age",
+      "dtype": "int64",
+      "n_unique": 84
+    },
+    {
+      "name": "pesticide",
+      "dtype": "object",
+      "n_unique": 2
+    },
+    {
+      "name": "gender",
+      "dtype": "str",
+      "n_unique": 2
+    },
+    {
+      "name": "skin_cancer_history",
+      "dtype": "object",
+      "n_unique": 2
+    },
+    {
+      "name": "cancer_history",
+      "dtype": "object",
+      "n_unique": 2
+    },
+    {
+      "name": "has_piped_water",
+      "dtype": "object",
+      "n_unique": 2
+    },
+    {
+      "name": "has_sewage_system",
+      "dtype": "object",
+      "n_unique": 2
+    },
+    {
+      "name": "fitspatrick",
+      "dtype": "float64",
+      "n_unique": 6
+    },
+    {
+      "name": "region",
+      "dtype": "str",
+      "n_unique": 14
+    },
+    {
+      "name": "diameter_1",
+      "dtype": "float64",
+      "n_unique": 42
+    },
+    {
+      "name": "diameter_2",
+      "dtype": "float64",
+      "n_unique": 38
+    },
+    {
+      "name": "diagnostic",
+      "dtype": "str",
+      "n_unique": 6
+    },
+    {
+      "name": "itch",
+      "dtype": "str",
+      "n_unique": 3
+    },
+    {
+      "name": "grew",
+      "dtype": "str",
+      "n_unique": 3
+    },
+    {
+      "name": "hurt",
+      "dtype": "str",
+      "n_unique": 3
+    },
+    {
+      "name": "changed",
+      "dtype": "str",
+      "n_unique": 3
+    },
+    {
+      "name": "bleed",
+      "dtype": "str",
+      "n_unique": 3
+    },
+    {
+      "name": "elevation",
+      "dtype": "str",
+      "n_unique": 3
+    },
+    {
+      "name": "img_id",
+      "dtype": "str",
+      "n_unique": 2298
+    },
+    {
+      "name": "biopsed",
+      "dtype": "bool",
+      "n_unique": 2
+    }
+  ],
+  "missing_values": {
+    "patient_id": {
+      "nan_count": 0,
+      "nan_pct": 0.0,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 0.0
+    },
+    "lesion_id": {
+      "nan_count": 0,
+      "nan_pct": 0.0,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 0.0
+    },
+    "smoke": {
+      "nan_count": 804,
+      "nan_pct": 34.99,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 34.99
+    },
+    "drink": {
+      "nan_count": 804,
+      "nan_pct": 34.99,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 34.99
+    },
+    "background_father": {
+      "nan_count": 818,
+      "nan_pct": 35.6,
+      "empty_string_count": 0,
+      "literal_UNK_count": 95,
+      "effective_missing_pct": 39.73
+    },
+    "background_mother": {
+      "nan_count": 822,
+      "nan_pct": 35.77,
+      "empty_string_count": 0,
+      "literal_UNK_count": 84,
+      "effective_missing_pct": 39.43
+    },
+    "age": {
+      "nan_count": 0,
+      "nan_pct": 0.0,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 0.0
+    },
+    "pesticide": {
+      "nan_count": 804,
+      "nan_pct": 34.99,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 34.99
+    },
+    "gender": {
+      "nan_count": 804,
+      "nan_pct": 34.99,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 34.99
+    },
+    "skin_cancer_history": {
+      "nan_count": 804,
+      "nan_pct": 34.99,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 34.99
+    },
+    "cancer_history": {
+      "nan_count": 804,
+      "nan_pct": 34.99,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 34.99
+    },
+    "has_piped_water": {
+      "nan_count": 804,
+      "nan_pct": 34.99,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 34.99
+    },
+    "has_sewage_system": {
+      "nan_count": 804,
+      "nan_pct": 34.99,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 34.99
+    },
+    "fitspatrick": {
+      "nan_count": 804,
+      "nan_pct": 34.99,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 34.99
+    },
+    "region": {
+      "nan_count": 0,
+      "nan_pct": 0.0,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 0.0
+    },
+    "diameter_1": {
+      "nan_count": 804,
+      "nan_pct": 34.99,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 34.99
+    },
+    "diameter_2": {
+      "nan_count": 804,
+      "nan_pct": 34.99,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 34.99
+    },
+    "diagnostic": {
+      "nan_count": 0,
+      "nan_pct": 0.0,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 0.0
+    },
+    "itch": {
+      "nan_count": 0,
+      "nan_pct": 0.0,
+      "empty_string_count": 0,
+      "literal_UNK_count": 6,
+      "effective_missing_pct": 0.26
+    },
+    "grew": {
+      "nan_count": 0,
+      "nan_pct": 0.0,
+      "empty_string_count": 0,
+      "literal_UNK_count": 402,
+      "effective_missing_pct": 17.49
+    },
+    "hurt": {
+      "nan_count": 0,
+      "nan_pct": 0.0,
+      "empty_string_count": 0,
+      "literal_UNK_count": 10,
+      "effective_missing_pct": 0.44
+    },
+    "changed": {
+      "nan_count": 0,
+      "nan_pct": 0.0,
+      "empty_string_count": 0,
+      "literal_UNK_count": 396,
+      "effective_missing_pct": 17.23
+    },
+    "bleed": {
+      "nan_count": 0,
+      "nan_pct": 0.0,
+      "empty_string_count": 0,
+      "literal_UNK_count": 6,
+      "effective_missing_pct": 0.26
+    },
+    "elevation": {
+      "nan_count": 0,
+      "nan_pct": 0.0,
+      "empty_string_count": 0,
+      "literal_UNK_count": 2,
+      "effective_missing_pct": 0.09
+    },
+    "img_id": {
+      "nan_count": 0,
+      "nan_pct": 0.0,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 0.0
+    },
+    "biopsed": {
+      "nan_count": 0,
+      "nan_pct": 0.0,
+      "empty_string_count": 0,
+      "literal_UNK_count": 0,
+      "effective_missing_pct": 0.0
+    }
+  },
+  "diagnostics": {
+    "unique_values": [
+      "ACK",
+      "BCC",
+      "MEL",
+      "NEV",
+      "SCC",
+      "SEK"
+    ],
+    "value_counts": {
+      "BCC": 845,
+      "ACK": 730,
+      "NEV": 244,
+      "SEK": 235,
+      "SCC": 192,
+      "MEL": 52
+    },
+    "mapping": {
+      "BCC": {
+        "count": 845,
+        "mapped": true,
+        "target": 1
+      },
+      "ACK": {
+        "count": 730,
+        "mapped": true,
+        "target": 0
+      },
+      "NEV": {
+        "count": 244,
+        "mapped": true,
+        "target": 0
+      },
+      "SEK": {
+        "count": 235,
+        "mapped": true,
+        "target": 0
+      },
+      "SCC": {
+        "count": 192,
+        "mapped": true,
+        "target": 1
+      },
+      "MEL": {
+        "count": 52,
+        "mapped": true,
+        "target": 1
+      }
+    },
+    "unmapped_values": {},
+    "mapping_definition": "PROJECT-SPECIFIC binary label definition, not a universal clinical definition. Cancer=1: BCC, SCC, MEL. Non-cancer=0: ACK, NEV, SEK. ACK (actinic keratosis) can represent a precancerous lesion and is grouped with the negative class only for this project's binary task."
+  },
+  "class_counts": {
+    "before_mapping": {
+      "BCC": 845,
+      "ACK": 730,
+      "NEV": 244,
+      "SEK": 235,
+      "SCC": 192,
+      "MEL": 52
+    },
+    "after_mapping": {
+      "non_cancer_0": 1209,
+      "cancer_1": 1089
+    },
+    "positive_rate": 0.4739
+  },
+  "identifiers": {
+    "duplicate_full_rows": 0,
+    "n_unique_patient_id": 1373,
+    "n_unique_lesion_id": 1641,
+    "n_unique_img_id": 2298,
+    "img_id_unique_per_row": true,
+    "lesion_ids_shared_across_patients": 250,
+    "lesion_id_globally_unique": false,
+    "grouping_key": "patient_id (lesion_id alone is NOT safe: 250 lesion ids are reused across different patients)",
+    "records_per_patient": {
+      "min": 1,
+      "max": 10,
+      "mean": 1.674,
+      "median": 1.0,
+      "patients_with_multiple_records": 544
+    }
+  },
+  "survey_block_missingness": {
+    "fields": [
+      "smoke",
+      "drink",
+      "pesticide",
+      "gender",
+      "skin_cancer_history",
+      "cancer_history",
+      "has_piped_water",
+      "has_sewage_system",
+      "fitspatrick",
+      "diameter_1",
+      "diameter_2"
+    ],
+    "rows_with_survey_absent": 804,
+    "rows_with_survey_present": 1494,
+    "nan_per_field": {
+      "smoke": 804,
+      "drink": 804,
+      "pesticide": 804,
+      "gender": 804,
+      "skin_cancer_history": 804,
+      "cancer_history": 804,
+      "has_piped_water": 804,
+      "has_sewage_system": 804,
+      "fitspatrick": 804,
+      "diameter_1": 804,
+      "diameter_2": 804
+    },
+    "diagnosis_by_survey_presence": {
+      "ACK": {
+        "survey_absent": 447,
+        "survey_present": 283
+      },
+      "BCC": {
+        "survey_absent": 0,
+        "survey_present": 845
+      },
+      "MEL": {
+        "survey_absent": 0,
+        "survey_present": 52
+      },
+      "NEV": {
+        "survey_absent": 169,
+        "survey_present": 75
+      },
+      "SCC": {
+        "survey_absent": 0,
+        "survey_present": 192
+      },
+      "SEK": {
+        "survey_absent": 188,
+        "survey_present": 47
+      }
+    },
+    "concern": "Every record missing the survey block carries a non-cancer diagnosis (ACK/NEV/SEK); all cancer records (BCC/MEL/SCC) have the block present. A model can therefore exploit missingness as a proxy for the negative class. This is investigated explicitly in training/evaluation."
+  },
+  "symptom_unk_counts": {
+    "itch": 6,
+    "grew": 402,
+    "hurt": 10,
+    "changed": 396,
+    "bleed": 6,
+    "elevation": 2
+  },
+  "biopsed_leakage_check": {
+    "diagnostic_x_biopsed": {
+      "ACK": {
+        "not_biopsed": 552,
+        "biopsed": 178
+      },
+      "BCC": {
+        "not_biopsed": 0,
+        "biopsed": 845
+      },
+      "MEL": {
+        "not_biopsed": 0,
+        "biopsed": 52
+      },
+      "NEV": {
+        "not_biopsed": 184,
+        "biopsed": 60
+      },
+      "SCC": {
+        "not_biopsed": 0,
+        "biopsed": 192
+      },
+      "SEK": {
+        "not_biopsed": 220,
+        "biopsed": 15
+      }
+    },
+    "reason_excluded": "Post-diagnostic biopsy decision - leaks information about the diagnostic process and the target (all BCC/MEL/SCC lesions were biopsied)."
+  }
+}

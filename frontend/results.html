@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assessment Results · Vireo Clinical</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" width="18" height="18"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="4"/></svg>
+      </span>
+      Vireo Clinical
+    </div>
+    <nav>
+      <a href="dashboard.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a href="predict.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="4"/></svg>
+        AI Prediction
+      </a>
+      <a href="patients.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Patients
+      </a>
+      <a href="reports.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 15h6M9 11h6"/></svg>
+        Reports
+      </a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1"/></svg>
+        Profile
+      </a>
+      <a href="#" class="nav-item" data-logout>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Logout
+      </a>
+    </nav>
+    <div class="sidebar-foot">Vireo Clinical v0.9 · Prototype</div>
+  </aside>
+
+  <div class="main-area">
+    <header class="topbar">
+      <div class="flex" style="align-items:center; gap:14px;">
+        <button class="menu-toggle" aria-label="Toggle menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div>
+          <h1 class="page-title">Assessment Results</h1>
+          <div class="page-date" data-current-date></div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="doctor-chip">
+          <div class="avatar" data-doctor-initials>DR</div>
+          <div>
+            <div class="name" data-doctor-name>Doctor</div>
+            <div class="role" data-doctor-role>Specialization</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- Analyzing state -->
+      <div id="analyzingPanel" class="card">
+        <div class="analyzing-panel">
+          <div class="analyzing-frame scan-frame">
+            <img id="analyzingFrameImg" alt="Lesion being analyzed">
+          </div>
+          <h3>Running dual-model analysis…</h3>
+          <p class="text-muted">Evaluating image and clinical data as independent models.</p>
+          <div class="analyzing-steps">IMAGE MODEL (EfficientNetB0) · CLINICAL MODEL (Clinical-Only XGBoost)</div>
+        </div>
+      </div>
+
+      <!-- Results state -->
+      <div id="resultsContent" style="display:none;">
+        <div class="card card-pad" style="margin-bottom:20px;">
+          <div class="flex" style="justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px;">
+            <div class="flex" style="gap:16px;">
+              <div style="width:72px; height:72px; border-radius:14px; overflow:hidden; border:1px solid var(--border); flex-shrink:0;">
+                <img id="resLesionImg" style="width:100%; height:100%; object-fit:cover;" alt="Lesion">
+              </div>
+              <div>
+                <h2 id="resPatientName" style="margin-bottom:4px;">Patient</h2>
+                <div class="text-muted mono" id="resPatientMeta" style="font-size:13px;"></div>
+              </div>
+            </div>
+            <a href="patients.html" class="btn btn-outline btn-sm">← Back to Patients</a>
+          </div>
+        </div>
+
+        <div class="results-grid">
+          <!-- Model 1: EfficientNetB0 -->
+          <div class="card model-card">
+            <div class="model-tag" id="effModelTag">Model 1 · EfficientNetB0 (ISIC 2019)</div>
+            <div class="predicted-class" id="effPredictedClass">—</div>
+            <div class="prob-row">
+              <div class="prob-label">Cancer Score <b id="effMalignantPct">0%</b></div>
+              <div class="prob-track"><div class="prob-fill malignant" id="effMalignantBar" style="width:0%"></div></div>
+            </div>
+            <div class="prob-row" style="margin-bottom:0;">
+              <div class="prob-label">Non-Cancer Score <b id="effBenignPct">0%</b></div>
+              <div class="prob-track"><div class="prob-fill benign" id="effBenignBar" style="width:0%"></div></div>
+            </div>
+            <div class="text-muted" style="font-size:11px; margin-top:10px;">Modality: Dermoscopic Lesion Image (224×224 RGB)</div>
+          </div>
+
+          <!-- Model 2: Clinical XGBoost -->
+          <div class="card model-card">
+            <div class="model-tag" id="cliModelTag">Model 2 · Clinical-Only XGBoost</div>
+            <div class="predicted-class" id="cliPredictedClass">—</div>
+            <div class="prob-row">
+              <div class="prob-label">Cancer Score <b id="cliMalignantPct">0%</b></div>
+              <div class="prob-track"><div class="prob-fill malignant" id="cliMalignantBar" style="width:0%"></div></div>
+            </div>
+            <div class="prob-row" style="margin-bottom:0;">
+              <div class="prob-label">Non-Cancer Score <b id="cliBenignPct">0%</b></div>
+              <div class="prob-track"><div class="prob-fill benign" id="cliBenignBar" style="width:0%"></div></div>
+            </div>
+            <div class="text-muted" style="font-size:11px; margin-top:10px;">Modality: 53 Encoded Dummy Clinical Features (PAD-UFES-20)</div>
+          </div>
+        </div>
+
+        <div class="fusion-card">
+          <div class="flex" style="justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div class="model-tag">Independent Dual-Model Assessment Overview</div>
+            <div class="mono text-muted" id="reportRefId" style="font-size:12px; font-weight:600;">Report ID: —</div>
+          </div>
+          <div class="fusion-top">
+            <div>
+              <h2 id="fusionPredictedClass">Independent Dual-Model Evaluation</h2>
+              <div id="fusionRiskPill" class="risk-pill low">Separate Models</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="text-muted mono" style="font-size:12px; font-weight:600; color:var(--text);">No Validated Combined Ensemble</div>
+              <div class="text-muted mono" style="font-size:11px;">ResNet50 Disconnected · 2 Independent Models</div>
+            </div>
+          </div>
+          <div class="fusion-explain" id="fusionExplanation" style="line-height:1.6; margin-top:12px;">
+            <b>Notice on Model Independence:</b> EfficientNetB0 evaluates skin lesion imagery alone, while Clinical-Only XGBoost evaluates demographic and symptom features alone. Because an ensemble combining these two models has not been statistically validated on paired testing data, results are presented as separate model outputs. No combined ensemble score or final merged classification is generated.
+          </div>
+        </div>
+
+        <div class="disclaimer-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div id="resultDisclaimerText">Experimental research prototype only. Scores are model estimates and not calibrated diagnostic probabilities. Not a certified medical diagnosis.</div>
+        </div>
+
+        <div class="action-row">
+          <button class="btn btn-accent btn-lg" id="generateReportBtn">Download Official PDF Report</button>
+          <button class="btn btn-outline" id="changeImageBtn" title="Select a different lesion image while retaining patient details">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Change Image
+          </button>
+          <button class="btn btn-primary" id="predictAgainBtn" title="Run another prediction prefilling current patient information">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+            Predict Again
+          </button>
+          <button class="btn btn-outline" id="printReportBtn">Print Report</button>
+          <a href="reports.html" class="btn btn-ghost" id="viewArchiveLink">View All Reports →</a>
+          <a href="dashboard.html" class="btn btn-ghost">Back to Dashboard</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="js/script.js"></script>
+<script>requireAuth();</script>
+</body>
+</html>

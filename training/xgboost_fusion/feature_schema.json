@@ -1,0 +1,233 @@
+{
+  "schema_version": "1.0",
+  "numeric_features": {
+    "age": "age",
+    "diameter_1": "diameter_1",
+    "diameter_2": "diameter_2",
+    "fitspatrick": "fitspatrick"
+  },
+  "boolean_features": {
+    "smoke": "smoke",
+    "drink": "drink",
+    "pesticide": "pesticide",
+    "skin_cancer_history": "skin_cancer_history",
+    "cancer_history": "cancer_history",
+    "has_piped_water": "has_piped_water",
+    "has_sewage_system": "has_sewage_system"
+  },
+  "symptom_features": {
+    "itch": "itch",
+    "grew": "grew",
+    "hurt": "hurt",
+    "changed": "changed",
+    "bleed": "bleed",
+    "elevation": "elevation"
+  },
+  "categorical_features": {
+    "background_father": {
+      "source_column": "background_father",
+      "categories_from_training": [
+        "AUSTRIA",
+        "BRAZIL",
+        "CZECH",
+        "GERMANY",
+        "ISRAEL",
+        "ITALY",
+        "NETHERLANDS",
+        "POLAND",
+        "POMERANIA",
+        "PORTUGAL",
+        "SPAIN"
+      ],
+      "dummy_columns": [
+        "background_father=AUSTRIA",
+        "background_father=BRAZIL",
+        "background_father=CZECH",
+        "background_father=GERMANY",
+        "background_father=ISRAEL",
+        "background_father=ITALY",
+        "background_father=NETHERLANDS",
+        "background_father=POLAND",
+        "background_father=POMERANIA",
+        "background_father=PORTUGAL",
+        "background_father=SPAIN"
+      ],
+      "missing_policy": "all dummies set to NaN when the source value is missing",
+      "unseen_policy": "all dummies set to 0 (observed but not seen during training)"
+    },
+    "background_mother": {
+      "source_column": "background_mother",
+      "categories_from_training": [
+        "BRAZIL",
+        "GERMANY",
+        "ITALY",
+        "NETHERLANDS",
+        "NORWAY",
+        "POLAND",
+        "POMERANIA",
+        "PORTUGAL",
+        "SPAIN"
+      ],
+      "dummy_columns": [
+        "background_mother=BRAZIL",
+        "background_mother=GERMANY",
+        "background_mother=ITALY",
+        "background_mother=NETHERLANDS",
+        "background_mother=NORWAY",
+        "background_mother=POLAND",
+        "background_mother=POMERANIA",
+        "background_mother=PORTUGAL",
+        "background_mother=SPAIN"
+      ],
+      "missing_policy": "all dummies set to NaN when the source value is missing",
+      "unseen_policy": "all dummies set to 0 (observed but not seen during training)"
+    },
+    "gender": {
+      "source_column": "gender",
+      "categories_from_training": [
+        "FEMALE",
+        "MALE"
+      ],
+      "dummy_columns": [
+        "gender=FEMALE",
+        "gender=MALE"
+      ],
+      "missing_policy": "all dummies set to NaN when the source value is missing",
+      "unseen_policy": "all dummies set to 0 (observed but not seen during training)"
+    },
+    "region": {
+      "source_column": "region",
+      "categories_from_training": [
+        "ABDOMEN",
+        "ARM",
+        "BACK",
+        "CHEST",
+        "EAR",
+        "FACE",
+        "FOOT",
+        "FOREARM",
+        "HAND",
+        "LIP",
+        "NECK",
+        "NOSE",
+        "SCALP",
+        "THIGH"
+      ],
+      "dummy_columns": [
+        "region=ABDOMEN",
+        "region=ARM",
+        "region=BACK",
+        "region=CHEST",
+        "region=EAR",
+        "region=FACE",
+        "region=FOOT",
+        "region=FOREARM",
+        "region=HAND",
+        "region=LIP",
+        "region=NECK",
+        "region=NOSE",
+        "region=SCALP",
+        "region=THIGH"
+      ],
+      "missing_policy": "all dummies set to NaN when the source value is missing",
+      "unseen_policy": "all dummies set to 0 (observed but not seen during training)"
+    }
+  },
+  "feature_order": [
+    "age",
+    "diameter_1",
+    "diameter_2",
+    "fitspatrick",
+    "smoke",
+    "drink",
+    "pesticide",
+    "skin_cancer_history",
+    "cancer_history",
+    "has_piped_water",
+    "has_sewage_system",
+    "itch",
+    "grew",
+    "hurt",
+    "changed",
+    "bleed",
+    "elevation",
+    "background_father=AUSTRIA",
+    "background_father=BRAZIL",
+    "background_father=CZECH",
+    "background_father=GERMANY",
+    "background_father=ISRAEL",
+    "background_father=ITALY",
+    "background_father=NETHERLANDS",
+    "background_father=POLAND",
+    "background_father=POMERANIA",
+    "background_father=PORTUGAL",
+    "background_father=SPAIN",
+    "background_mother=BRAZIL",
+    "background_mother=GERMANY",
+    "background_mother=ITALY",
+    "background_mother=NETHERLANDS",
+    "background_mother=NORWAY",
+    "background_mother=POLAND",
+    "background_mother=POMERANIA",
+    "background_mother=PORTUGAL",
+    "background_mother=SPAIN",
+    "gender=FEMALE",
+    "gender=MALE",
+    "region=ABDOMEN",
+    "region=ARM",
+    "region=BACK",
+    "region=CHEST",
+    "region=EAR",
+    "region=FACE",
+    "region=FOOT",
+    "region=FOREARM",
+    "region=HAND",
+    "region=LIP",
+    "region=NECK",
+    "region=NOSE",
+    "region=SCALP",
+    "region=THIGH"
+  ],
+  "project": "clinical-only XGBoost on PAD-UFES-20",
+  "created_at_utc": "2026-10-17T07:29:35.745936+00:00",
+  "target": {
+    "name": "cancer_target",
+    "positive_class": 1,
+    "negative_class": 0,
+    "mapping": {
+      "cancer_1": [
+        "BCC",
+        "MEL",
+        "SCC"
+      ],
+      "non_cancer_0": [
+        "ACK",
+        "NEV",
+        "SEK"
+      ]
+    },
+    "note": "PROJECT-SPECIFIC binary label definition, not a universal clinical definition. ACK (actinic keratosis) can be a precancerous lesion and is grouped with the negative class only for this project."
+  },
+  "excluded_columns": {
+    "patient_id": "Patient identifier - grouping key for leakage-safe splits; never a predictor.",
+    "lesion_id": "Lesion identifier - not globally unique (reused across patients) and is an identifier, not a clinical predictor.",
+    "img_id": "Image filename - image-derived; this model is clinical-only.",
+    "diagnostic": "Raw diagnosis label - direct source of the target.",
+    "biopsed": "Post-diagnostic biopsy decision - leaks information about the diagnostic process and the target (all BCC/MEL/SCC lesions were biopsied)."
+  },
+  "missing_tokens": [
+    "",
+    "-",
+    "?",
+    "N/A",
+    "NA",
+    "NAN",
+    "NONE",
+    "UNK",
+    "UNKNOWN"
+  ],
+  "missing_value_policy": "empty strings and 'UNK' are missing; missing values stay NaN and are handled natively by XGBoost (no imputation)",
+  "fitpatrick_policy": "ordinal 1-6; values normalised via numeric conversion so 1, 1.0 and '1.0' are identical; out-of-range values become missing",
+  "seed": 42,
+  "n_training_rows_used_to_fit_categories": 1609
+}
